@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :messages, foreign_key: "user_id"
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :username, presence: true, length: { maximum: 32 }
   validate :discriminator_unique_for_username
