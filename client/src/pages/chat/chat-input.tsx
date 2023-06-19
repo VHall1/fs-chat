@@ -6,7 +6,11 @@ import { useUserStore } from "../../global-store/user-store";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../api";
 
-export const ChatInput = ({ onSubmit }: { onSubmit: () => void }) => {
+export const ChatInput = ({
+  onSubmit,
+}: {
+  onSubmit: () => void;
+}) => {
   const [inputText, setInputText] = useState("");
   const { user } = useUserStore();
 

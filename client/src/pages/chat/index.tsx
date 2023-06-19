@@ -1,26 +1,8 @@
 import { Avatar, Box, Sheet, Typography } from "@mui/joy";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../api";
-import { ChatMessage } from "./chat-message";
-import { MessagesContainer } from "./chat-message/messages-container";
-import { ChatInput } from "./chat-input";
+import { ChatMessages } from "./chat-messages";
 import { Sidenav } from "./sidenav";
 
 export const Chat = () => {
-  // This is very inneficient
-  // 1. We're fetching ALL messages
-  // 2. We're re-fetching ALL messages on every new message
-  // Ideally we would only fetch the last X messages on initial load and
-  // then use the last message on the list as the cursor to fetch the next X messages
-  const {
-    data: messages,
-    isLoading,
-    refetch: refetchMessages,
-  } = useQuery({
-    queryKey: ["getMessages"],
-    queryFn: getMessages,
-  });
-
   return (
     <Box sx={{ height: "100vh", width: "100vw", display: "flex" }}>
       <Sidenav />
@@ -41,19 +23,7 @@ export const Chat = () => {
           },
         })}
       >
-        <Sheet
-          variant="soft"
-          sx={{ height: 1.0, display: "flex", flexDirection: "column" }}
-        >
-          <MessagesContainer>
-            {isLoading && <Typography>Loading...</Typography>}
-            {messages?.map((message) => (
-              <ChatMessage key={message.id} message={message} />
-            ))}
-          </MessagesContainer>
-
-          <ChatInput onSubmit={refetchMessages} />
-        </Sheet>
+        <ChatMessages />
       </Box>
 
       <Sheet
@@ -90,6 +60,3 @@ export const Chat = () => {
     </Box>
   );
 };
-
-const getMessages: () => Promise<Message[]> = async () =>
-  (await api.get("/messages")).data;
