@@ -11,6 +11,7 @@ export const MessagesContainer: React.FC<PropsWithChildren> = ({
         flexGrow: 1,
         overflow: "hidden",
         overflowY: "auto",
+        gap: 1,
         display: "flex",
         flexDirection: "column-reverse",
       }}

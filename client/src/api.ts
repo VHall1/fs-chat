@@ -1,8 +1,12 @@
 import axios from "axios";
+import applyCaseMiddleware from "axios-case-converter";
 
-export const api = axios.create({
-  baseURL: "http://localhost:4000",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+export const api = applyCaseMiddleware(
+  axios.create({
+    baseURL: "http://localhost:3000",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  })
+);
