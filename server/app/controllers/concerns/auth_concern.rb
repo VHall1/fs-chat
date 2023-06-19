@@ -4,8 +4,7 @@ module AuthConcern
   def require_login
     return if current_user
 
-    flash[:error] = 'You must be logged in to access this section'
-    redirect_to login_path # change this to your login page path
+    render json: { error: 'Not logged in' }, status: :unauthorized
   end
 
   def current_user

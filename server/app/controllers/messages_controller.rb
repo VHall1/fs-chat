@@ -1,9 +1,12 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: %i[ show update destroy ]
+  include AuthConcern
+
+  before_action :set_message, only: %i[show update destroy]
+  before_action :require_login
 
   # GET /messages
   def index
-    @messages = Message.all
+    @messages = Message.all.order(created_at: :desc)
 
     render json: @messages
   end
@@ -15,7 +18,7 @@ class MessagesController < ApplicationController
 
   # POST /messages
   def create
-    @message = Message.new(message_params)
+    @message = current_user.messages.new(message_params)
 
     if @message.save
       render json: @message, status: :created, location: @message
@@ -39,13 +42,14 @@ class MessagesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_message
-      @message = Message.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def message_params
-      params.require(:message).permit(:content)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = Message.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def message_params
+    params.require(:message).permit(:content)
+  end
 end
