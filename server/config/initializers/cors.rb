@@ -5,12 +5,16 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-# Rails.application.config.middleware.insert_before 0, Rack::Cors do
-#   allow do
-#     origins "example.com"
-#
-#     resource "*",
-#       headers: :any,
-#       methods: [:get, :post, :put, :patch, :delete, :options, :head]
-#   end
-# end
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins do |origin, _env|
+      # allow requests from the same domain but different port
+      origin.start_with?(ENV['TOP_LEVEL_DOMAIN'])
+    end
+
+    resource '*',
+             headers: :any,
+             methods: %i[get post put patch delete options head],
+             credentials: true
+  end
+end
