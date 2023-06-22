@@ -6,7 +6,13 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @messages = Message.all.order(created_at: :desc)
+    params.permit(:cursor)
+
+    if (cursor = params[:cursor])
+      @messages = Message.where('id >= ?', cursor).order(created_at: :desc)
+    else
+      @messages = Message.all.order(created_at: :desc).limit(25)
+    end
 
     render json: @messages
   end
