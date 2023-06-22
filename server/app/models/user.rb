@@ -5,7 +5,7 @@ class User < ApplicationRecord
   validates :username, presence: true, length: { maximum: 32 }
   validate :discriminator_unique_for_username
 
-  before_create :generate_discriminator
+  before_create :generate_discriminator!
 
   def discriminator_unique_for_username
     return unless User.exists?(username:, discriminator:)
@@ -14,12 +14,12 @@ class User < ApplicationRecord
   end
 
   def generate_discriminator
-    return if discriminator.present?
-
     existing_discriminators = User.where(username:).pluck(:discriminator)
     available_discriminators = ('0000'..'9999').to_a - existing_discriminators
+    available_discriminators.sample || raise('Could not generate a unique discriminator')
+  end
 
-    self.discriminator = available_discriminators.sample ||
-      raise('Could not generate a unique discriminator')
+  def generate_discriminator!
+    self.discriminator = generate_discriminator
   end
 end
