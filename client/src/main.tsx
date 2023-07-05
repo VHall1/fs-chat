@@ -1,9 +1,9 @@
+import "@fontsource/public-sans";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SnackbarProvider } from "notistack";
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-import "@fontsource/public-sans";
-import { CssBaseline, CssVarsProvider } from "@mui/joy";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes.tsx";
 import theme from "./theme.ts";
@@ -12,11 +12,12 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <CssVarsProvider theme={theme} defaultMode="system">
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
+        <SnackbarProvider />
         <RouterProvider router={routes} />
       </QueryClientProvider>
-    </CssVarsProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

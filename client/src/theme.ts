@@ -1,5 +1,5 @@
-import { extendTheme } from "@mui/joy";
+import { createTheme } from "@mui/material";
 
-const theme = extendTheme({});
+const theme = createTheme({});
 
 export default theme;
