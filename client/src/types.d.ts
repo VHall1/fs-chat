@@ -3,8 +3,6 @@ interface User {
   email: string;
   username: string;
   discriminator: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface Message {
