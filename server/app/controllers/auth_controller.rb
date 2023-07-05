@@ -1,40 +1,39 @@
 class AuthController < ApplicationController
   include AuthConcern
 
-  before_action :require_login, only: [:me]
+  before_action :require_login, only: %i[me]
 
-  def authenticate
-    params.require([:username, :discriminator])
-
-    user = User.find_by(
+  def register
+    user = User.new(
+      email: params[:email],
       username: params[:username],
-      discriminator: params[:discriminator]
+      password: params[:password]
     )
 
-    if user.nil?
-      render json: { error: 'Invalid username or discriminator' }, status: :not_found
-      return
+    if user.save
+      session[:user_id] = user.id
+      render 'register', locals: { user: }, formats: :json
+    else
+      render json: { error: user.errors.full_messages }, status: :bad_request
     end
-
-    session[:user_id] = user.id
-    render json: user
-    # redirect_to OAuth::GitHub.authorize_url
   end
 
-  # def callback
-  #   params.require(:code)
+  def login
+    user = User.find_by(email: params[:email])
+    if user&.authenticate(params[:password])
+      session[:user_id] = user.id
+      render 'login', locals: { user: }, formats: :json
+    else
+      render json: { error: 'Invalid email or password' }, status: :unauthorized
+    end
+  end
 
-  #   token = OAuth::GitHub.get_token(params[:code])
-  #   github_user = OAuth::GitHub.get_user(token)
-
-  #   User.find_or_create_by(email: github_user["email"])
-
-  #   respond_to do |format|
-  #     format.json ''
-  #   end
-  # end
+  def logout
+    session[:user_id] = nil
+    render json: { message: 'Logged out' }
+  end
 
   def me
-    render json: current_user
+    render 'login', locals: { user: current_user }, formats: :json
   end
 end
