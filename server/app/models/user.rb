@@ -1,14 +1,15 @@
 class User < ApplicationRecord
   has_many :messages
+  has_secure_password
 
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
-  validates :username, presence: true, length: { maximum: 32 }
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :username, length: { maximum: 32 }
   validate :discriminator_unique_for_username
 
   before_create :generate_discriminator!
 
   def discriminator_unique_for_username
-    return unless User.exists?(username:, discriminator:)
+    return unless User.where(username:, discriminator:).where.not(id:).exists?
 
     errors.add(:discriminator, 'is already taken')
   end
