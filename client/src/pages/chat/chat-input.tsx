@@ -1,4 +1,4 @@
-import { Box, IconButton, Input } from "@mui/joy";
+import { Box, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
@@ -6,43 +6,41 @@ import { useUserStore } from "../../global-store/user-store";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../api";
 
-export const ChatInput = ({
-  onSubmit,
-}: {
-  onSubmit: () => void;
-}) => {
+export const ChatInput = () => {
   const [inputText, setInputText] = useState("");
   const { user } = useUserStore();
 
-  const { mutateAsync: handlePostMessage } = useMutation({
+  const { mutate: handlePostMessage } = useMutation({
     mutationFn: postMessage,
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setInputText("");
-    await handlePostMessage({ content: inputText });
-    onSubmit();
+    handlePostMessage({ content: inputText });
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Box sx={{ p: 1 }}>
-        <Input
+        <TextField
+          fullWidth
           variant="outlined"
           placeholder="Type a message..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          endDecorator={
-            <Box display="flex" gap={1}>
-              <IconButton variant="plain" color="neutral" disabled={!user}>
-                <EmojiEmotionsIcon />
-              </IconButton>
-              <IconButton variant="plain" color="neutral" disabled={!user}>
-                <SendIcon />
-              </IconButton>
-            </Box>
-          }
+          InputProps={{
+            endAdornment: (
+              <Box display="flex" gap={1}>
+                <IconButton disabled={!user}>
+                  <EmojiEmotionsIcon />
+                </IconButton>
+                <IconButton disabled={!user}>
+                  <SendIcon />
+                </IconButton>
+              </Box>
+            ),
+          }}
           disabled={!user}
           required
         />

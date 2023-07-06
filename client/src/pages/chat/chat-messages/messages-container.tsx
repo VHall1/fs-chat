@@ -1,8 +1,9 @@
-import { Box } from "@mui/joy";
+import { Box, BoxProps } from "@mui/material";
 import { PropsWithChildren } from "react";
 
-export const MessagesContainer: React.FC<PropsWithChildren> = ({
+export const MessagesContainer: React.FC<PropsWithChildren<BoxProps>> = ({
   children,
+  ...props
 }) => {
   return (
     <Box
@@ -15,6 +16,7 @@ export const MessagesContainer: React.FC<PropsWithChildren> = ({
         display: "flex",
         flexDirection: "column-reverse",
       }}
+      {...props}
     >
       {children}
     </Box>

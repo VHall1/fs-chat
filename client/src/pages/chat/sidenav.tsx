@@ -1,8 +1,8 @@
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Avatar, Box, IconButton, Sheet, Typography } from "@mui/joy";
-import { useQuery } from "@tanstack/react-query";
-import { useUserStore } from "../../../global-store/user-store";
-import { getCurrentUser } from "../../../queries/user-query";
+import { Avatar, Box, IconButton, Paper, Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useUserStore } from "../../global-store/user-store";
+import { deleteLogout, getCurrentUser } from "../../queries/user-queries";
 
 export const Sidenav = () => {
   const { user, setUser } = useUserStore();
@@ -13,9 +13,13 @@ export const Sidenav = () => {
     onSuccess: (data) => setUser(data),
   });
 
+  const { mutate: handleLogout } = useMutation({
+    mutationFn: deleteLogout,
+    onSuccess: () => setUser(null),
+  });
+
   return (
-    <Sheet
-      variant="soft"
+    <Paper
       component="nav"
       sx={{
         flex: 1,
@@ -39,15 +43,18 @@ export const Sidenav = () => {
       >
         {user ? (
           <>
-            <Avatar variant="solid">T</Avatar>
+            <Avatar>T</Avatar>
             <Box ml={1}>
-              <Typography>
+              <Typography component="span">
                 {user.username}
-                <Typography level="body3">#{user.discriminator}</Typography>
+                <Typography variant="subtitle2" component="span">
+                  #{user.discriminator}
+                </Typography>
               </Typography>
-              <Typography level="body3">Cool! :)</Typography>
+
+              <Typography variant="subtitle1">Cool! :)</Typography>
             </Box>
-            <IconButton sx={{ ml: "auto" }} variant="plain" color="neutral">
+            <IconButton sx={{ ml: "auto" }} onClick={() => handleLogout()}>
               <LogoutIcon />
             </IconButton>
           </>
@@ -55,6 +62,6 @@ export const Sidenav = () => {
           "loading"
         )}
       </Box>
-    </Sheet>
+    </Paper>
   );
 };

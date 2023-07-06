@@ -1,57 +1,103 @@
-import { Sheet, Typography } from "@mui/joy";
-import { QueryFunction, useQuery } from "@tanstack/react-query";
-import { api } from "../../../api";
+import { Paper, Typography } from "@mui/material";
+import {
+  InfiniteData,
+  QueryFunction,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { api, wss } from "../../../api";
 import { ChatInput } from "../chat-input";
 import { ChatMessage } from "./chat-message";
 import { MessagesContainer } from "./messages-container";
 
 export const ChatMessages = () => {
-  // This is very inneficient
-  // 1. We're fetching ALL messages
-  // 2. We're re-fetching ALL messages on every new message
-  // Ideally we would only fetch the last X messages on initial load and
-  // then use the last message on the list as the cursor to fetch the next X messages
+  const [messages, setMessages] = useState<
+    | InfiniteData<{
+        data: Message[];
+        nextCursor?: number | undefined;
+      }>
+    | undefined
+  >(undefined);
 
-  // TODO: this is not working. Look into using useInfiniteQuery
-  const {
-    data: messages,
-    isLoading,
-    refetch: refetchMessages,
-  } = useQuery({
-    queryKey: ["messages", {}],
+  useEffect(() => {
+    const channel = wss.subscriptions.create("ChatChannel", {
+      received: (data) => {
+        console.log("New message received", data);
+        setMessages((prev) => {
+          if (!prev) return prev;
+
+          return {
+            ...prev,
+            pages: [
+              {
+                ...prev.pages[0],
+                data: [...data, ...prev.pages[0].data],
+              },
+              ...prev.pages.slice(1),
+            ],
+          };
+        });
+      },
+    });
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [setMessages]);
+
+  const { isLoading, isFetching, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["messages"],
     queryFn: getMessages,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    onSuccess: (data) => setMessages(data),
+    refetchOnWindowFocus: false,
   });
 
-  const handleRefetchFromCursor = (messageID: number) => {
-    refetchMessages(["messages", { cursor: messageID }]);
-  };
+  const flatMessages = useMemo(
+    () => messages?.pages?.flatMap((page) => page.data) ?? [],
+    [messages]
+  );
+
+  const hasOldestMessage = messages?.pages?.slice(-1)[0].nextCursor === 1;
+  const fetchMoreOnTopReached = useCallback(
+    (containerRefElement?: HTMLDivElement | null) => {
+      if (containerRefElement) {
+        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
+        if (
+          scrollHeight + scrollTop - clientHeight < 300 &&
+          !isFetching &&
+          !hasOldestMessage
+        ) {
+          fetchNextPage();
+        }
+      }
+    },
+    [isFetching, fetchNextPage, hasOldestMessage]
+  );
 
   return (
-    <Sheet
-      variant="soft"
-      sx={{ height: 1.0, display: "flex", flexDirection: "column" }}
-    >
-      <MessagesContainer>
+    <Paper sx={{ height: 1.0, display: "flex", flexDirection: "column" }}>
+      <MessagesContainer
+        onScroll={(e) => fetchMoreOnTopReached(e.target as HTMLDivElement)}
+      >
         {isLoading && <Typography>Loading...</Typography>}
-        {messages?.map((message) => (
+        {flatMessages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
       </MessagesContainer>
 
-      <ChatInput
-        onSubmit={() =>
-          handleRefetchFromCursor((messages || []).slice(-1)[0].id)
-        }
-      />
-    </Sheet>
+      <ChatInput />
+    </Paper>
   );
 };
 
-const getMessages: QueryFunction<
-  Message[],
-  [string, { cursor?: number }]
-> = async ({ queryKey }) => {
-  const [_key, params] = queryKey;
-  console.log(params, queryKey);
-  return (await api.get("/messages", { params })).data;
-};
+const getMessages: QueryFunction<{
+  data: Message[];
+  nextCursor?: number;
+}> = async ({ pageParam }) =>
+  (
+    await api.get("/messages", {
+      params: { cursor: pageParam },
+    })
+  ).data;

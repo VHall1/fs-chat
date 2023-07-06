@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from "@mui/joy";
+import { Avatar, Box, Typography } from "@mui/material";
 
 export const ChatMessage = ({ message }: { message: Message }) => {
   const formatDate = (date: string) => {
@@ -25,11 +25,13 @@ export const ChatMessage = ({ message }: { message: Message }) => {
 
   return (
     <Box display="flex">
-      <Avatar variant="solid">T</Avatar>
+      <Avatar>T</Avatar>
       <Box ml={1}>
         <Box display="flex" alignItems="center" gap={0.5}>
           <Typography>Frk</Typography>
-          <Typography level="body4">{formatDate(message.createdAt)}</Typography>
+          <Typography variant="subtitle2">
+            {formatDate(message.createdAt)}
+          </Typography>
         </Box>
         <Typography>{message.content}</Typography>
       </Box>

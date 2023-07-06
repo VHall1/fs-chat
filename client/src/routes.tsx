@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
+import { Login } from "./pages/auth/login";
+import { Register } from "./pages/auth/register";
 import { Chat } from "./pages/chat";
-import { Auth } from "./pages/auth";
 
 const routes = createBrowserRouter([
   {
@@ -8,8 +9,17 @@ const routes = createBrowserRouter([
     element: <Chat />,
   },
   {
-    path: "/auth",
-    element: <Auth />,
+    path: "auth",
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+    ],
   },
 ]);
 

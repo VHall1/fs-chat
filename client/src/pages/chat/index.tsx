@@ -1,4 +1,4 @@
-import { Avatar, Box, Sheet, Typography } from "@mui/joy";
+import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { ChatMessages } from "./chat-messages";
 import { Sidenav } from "./sidenav";
 
@@ -26,8 +26,7 @@ export const Chat = () => {
         <ChatMessages />
       </Box>
 
-      <Sheet
-        variant="soft"
+      <Paper
         sx={{
           flex: 1,
           display: "flex",
@@ -49,14 +48,12 @@ export const Chat = () => {
         >
           {[...new Array(20)].map(() => (
             <Box display="flex">
-              <Avatar variant="solid" sx={{ mr: 1 }}>
-                T
-              </Avatar>
+              <Avatar sx={{ mr: 1 }}>T</Avatar>
               <Typography>@mrfrk</Typography>
             </Box>
           ))}
         </Box>
-      </Sheet>
+      </Paper>
     </Box>
   );
 };
