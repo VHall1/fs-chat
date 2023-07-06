@@ -13,7 +13,7 @@ import { MessagesContainer } from "./messages-container";
 export const ChatMessages = () => {
   const [messages, setMessages] = useState<
     | InfiniteData<{
-        data: Message[];
+        data: MessageData[];
         nextCursor?: number | undefined;
       }>
     | undefined
@@ -83,7 +83,12 @@ export const ChatMessages = () => {
       >
         {isLoading && <Typography>Loading...</Typography>}
         {flatMessages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
+          <ChatMessage
+            key={message.id}
+            message={message.content}
+            timestamp={message.createdAt}
+            username={message.user.username}
+          />
         ))}
       </MessagesContainer>
 
@@ -93,7 +98,7 @@ export const ChatMessages = () => {
 };
 
 const getMessages: QueryFunction<{
-  data: Message[];
+  data: MessageData[];
   nextCursor?: number;
 }> = async ({ pageParam }) =>
   (
@@ -101,3 +106,5 @@ const getMessages: QueryFunction<{
       params: { cursor: pageParam },
     })
   ).data;
+
+type MessageData = Message & { user: Pick<User, "id" | "username"> };
