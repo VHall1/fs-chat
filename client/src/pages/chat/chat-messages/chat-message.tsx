@@ -33,11 +33,13 @@ export const ChatMessage = ({
 
   return (
     <Box display="flex">
-      <Avatar>T</Avatar>
+      <Avatar />
       <Box ml={1}>
-        <Box display="flex" alignItems="center" gap={0.5}>
+        <Box display="flex" alignItems="flex-end" gap={0.5}>
           <Typography>{username}</Typography>
-          <Typography variant="subtitle2">{formatDate(timestamp)}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            {formatDate(timestamp)}
+          </Typography>
         </Box>
         <Typography>{message}</Typography>
       </Box>
