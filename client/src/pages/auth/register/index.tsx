@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postLogin } from "../../../queries/user-queries";
+import { postRegister } from "../../../queries/user-queries";
 import { AuthLayout } from "../layout";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -13,19 +13,19 @@ export const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate: handleLogin, error } = useMutation<
+  const { mutate: handleRegister, error } = useMutation<
     User,
     AxiosError<{ error: string }>,
     // Extracts the type of the first argument of postLogin
-    Parameters<typeof postLogin>[0]
+    Parameters<typeof postRegister>[0]
   >({
-    mutationFn: postLogin,
+    mutationFn: postRegister,
     onSuccess: () => navigate("/"),
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleLogin({ email, password });
+    handleRegister({ email, username, password });
   };
 
   return (

@@ -14,7 +14,7 @@ export const postRegister: (data: {
   username: string;
   password: string;
 }) => Promise<User> = async (data) =>
-  (await api.post("/auth/login", data)).data;
+  (await api.post("/auth/register", data)).data;
 
 export const deleteLogout: () => Promise<void> = async () =>
   (await api.delete("/auth/logout")).data;
