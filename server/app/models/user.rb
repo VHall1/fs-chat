@@ -2,7 +2,7 @@ class User < ApplicationRecord
   has_many :messages
   has_secure_password
 
-  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, uniqueness: true
   validates :username, length: { maximum: 32 }
   validate :discriminator_unique_for_username
 
