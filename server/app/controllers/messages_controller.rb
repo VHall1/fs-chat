@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
       @messages = Message.all.order(id: :desc).limit(25)
     end
 
-    render 'index', locals: { messages: @messages }, formats: :json
+    render 'index', formats: :json
   end
 
   # GET /messages/1
@@ -25,8 +25,11 @@ class MessagesController < ApplicationController
     @message = current_user.messages.new(message_params)
 
     if @message.save
-      ActionCable.server.broadcast('chat', @message)
-      render json: @message, status: :created, location: @message
+      ActionCable.server.broadcast(
+        'chat',
+        render_to_string(template: 'messages/create', locals: { message: @message }, formats: :json)
+      )
+      head :created
     else
       render json: @message.errors, status: :unprocessable_entity
     end
