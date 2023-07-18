@@ -24,13 +24,9 @@ module Server
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Authentication stores
+    # Authentication store
     config.session_store :cookie_store, key: '_fschat_session'
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store
-
-    # WebSockets
-    config.action_cable.url = 'ws://localhost:3000/cable'
-    config.action_cable.disable_request_forgery_protection = true
   end
 end

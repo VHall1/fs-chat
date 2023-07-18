@@ -156,6 +156,9 @@ GEM
       zeitwerk (~> 2.5)
     rake (13.0.6)
     redis (4.8.1)
+    redis-session-store (0.11.5)
+      actionpack (>= 6, < 8)
+      redis (>= 3, < 6)
     reline (0.3.5)
       io-console (~> 0.5)
     thor (1.2.2)
@@ -182,6 +185,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.0.5)
   redis (~> 4.0)
+  redis-session-store
   tzinfo-data
 
 RUBY VERSION
