@@ -35,9 +35,11 @@ export const ChatMessage = ({
     <Box display="flex">
       <Avatar />
       <Box ml={1}>
-        <Box display="flex" alignItems="flex-end" gap={0.5}>
-          <Typography>{username}</Typography>
-          <Typography variant="caption" color="text.secondary">
+        <Box>
+          <Typography component="span" mr={0.5}>
+            {username}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" component="span">
             {formatDate(timestamp)}
           </Typography>
         </Box>

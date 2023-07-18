@@ -1,4 +1,5 @@
 import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { Avatar, Box, IconButton, Paper, Typography } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUserStore } from "../../global-store/user-store";
@@ -43,20 +44,31 @@ export const Sidenav = () => {
       >
         {user ? (
           <>
-            <Avatar>T</Avatar>
+            <Avatar />
             <Box ml={1}>
-              <Typography component="span">
-                {user.username}
-                <Typography variant="subtitle2" component="span">
-                  #{user.discriminator}
-                </Typography>
+              <Typography component="div">{user.username}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                component="div"
+              >
+                #{user.discriminator}
               </Typography>
-
-              <Typography variant="subtitle1">Cool! :)</Typography>
             </Box>
-            <IconButton sx={{ ml: "auto" }} onClick={() => handleLogout()}>
-              <LogoutIcon />
-            </IconButton>
+            <Box sx={{ ml: "auto" }}>
+              <IconButton
+                sx={{ borderRadius: 1 }}
+                onClick={() => handleLogout()}
+              >
+                <SettingsIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                sx={{ borderRadius: 1 }}
+                onClick={() => handleLogout()}
+              >
+                <LogoutIcon fontSize="small" />
+              </IconButton>
+            </Box>
           </>
         ) : (
           "loading"
