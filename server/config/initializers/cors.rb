@@ -9,7 +9,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins do |origin, _env|
       # allow requests from the same domain but different port
-      origin.start_with? 'http://localhost:5173'
+      origin.start_with? ENV.fetch('TOP_LEVEL_DOMAIN', 'http://localhost:5173')
     end
 
     resource '*',
