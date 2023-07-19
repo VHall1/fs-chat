@@ -27,11 +27,15 @@ module Server
     # This also configures session_options for use below
     config.session_store :cookie_store,
       key: '_fschat_session',
-      domain: Rails.env.production? ? 'fs-chat.vercel.app' : nil
+      expires: 2.weeks,
+      same_site: :none,
+      secure: Rails.env.production?
 
     # Required for all session management (regardless of session_store)
     config.middleware.use ActionDispatch::Cookies
 
     config.middleware.use config.session_store, config.session_options
+
+    config.action_cable.allowed_request_origins = [ENV.fetch('TOP_LEVEL_DOMAIN', 'http://localhost:5173')]
   end
 end
