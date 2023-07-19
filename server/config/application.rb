@@ -27,7 +27,7 @@ module Server
     # This also configures session_options for use below
     config.session_store :cookie_store,
       key: '_fschat_session',
-      domain: Rails.env.production? ? '.fs-chat.vercel.app' : nil
+      domain: Rails.env.production? ? 'fs-chat.vercel.app' : nil
 
     # Required for all session management (regardless of session_store)
     config.middleware.use ActionDispatch::Cookies
