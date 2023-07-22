@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  before_action :require_login, only: %i[me]
+  before_action :require_login!, only: %i[me]
 
   def register
     user = User.new(

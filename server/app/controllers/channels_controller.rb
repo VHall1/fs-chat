@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   before_action :set_channel, only: %i[update destroy]
-  before_action :require_login
+  before_action :require_login!
 
   # GET /channels
   # GET /channels.json
