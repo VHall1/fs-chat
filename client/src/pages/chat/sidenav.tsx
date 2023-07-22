@@ -60,6 +60,7 @@ export const Sidenav = () => {
         flexDirection: "column",
         borderRight: 1,
         borderColor: (theme) => theme.palette.divider,
+        borderRadius: 0,
       }}
     >
       {isLoadingChannels ? (

@@ -37,6 +37,7 @@ export const Userlist = () => {
         flexDirection: "column",
         borderLeft: 1,
         borderColor: (theme) => theme.palette.divider,
+        borderRadius: 0,
       }}
     >
       <Box

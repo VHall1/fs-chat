@@ -85,7 +85,14 @@ export const ChatMessages = () => {
   );
 
   return (
-    <Paper sx={{ height: 1.0, display: "flex", flexDirection: "column" }}>
+    <Paper
+      sx={{
+        height: 1.0,
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 0,
+      }}
+    >
       <MessagesContainer
         onScroll={(e) =>
           debouncedFetchMoreOnTopReached(e.target as HTMLDivElement)
