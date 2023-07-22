@@ -1,5 +1,5 @@
 interface User {
-  id: number;
+  id: string;
   email: string;
   username: string;
   discriminator: number;
@@ -9,14 +9,14 @@ interface User {
 }
 
 interface Message {
-  id: number;
+  id: string;
   content: string;
   createdAt: string;
   updatedAt: string;
 }
 
 interface Channel {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;

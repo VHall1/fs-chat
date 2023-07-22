@@ -14,7 +14,10 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../api";
-import { deleteLogout, getCurrentUser } from "../../shared-queries/user-queries";
+import {
+  deleteLogout,
+  getCurrentUser,
+} from "../../shared-queries/user-queries";
 
 export const Sidenav = () => {
   const queryClient = useQueryClient();
@@ -36,14 +39,13 @@ export const Sidenav = () => {
   if (channels && !isLoadingChannels && !channelId) {
     requestAnimationFrame(() => navigate(`/chat/${channels[0].id}`));
   }
-  const formattedChannelId = channelId ? parseInt(channelId) : undefined;
 
   const handleLogout = async () => {
     await mutateAsyncLogout();
     queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
   };
 
-  const handleClickChannel = (channels: Channel[], channelId: number) => {
+  const handleClickChannel = (channels: Channel[], channelId: string) => {
     if (channels.find((channel) => channel.id === channelId)) {
       navigate(`/chat/${channelId}`);
     }
@@ -79,7 +81,7 @@ export const Sidenav = () => {
               key={`${channel.name}-${channel.id}`}
             >
               <ListItemButton
-                selected={channel.id === formattedChannelId}
+                selected={channel.id === channelId}
                 onClick={() => handleClickChannel(channels, channel.id)}
               >
                 # {channel.name}
