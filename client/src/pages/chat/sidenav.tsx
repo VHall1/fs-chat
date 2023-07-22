@@ -72,10 +72,7 @@ export const Sidenav = () => {
               </Typography>
             </Box>
             <Box sx={{ ml: "auto" }}>
-              <IconButton
-                sx={{ borderRadius: 1 }}
-                onClick={() => handleLogout()}
-              >
+              <IconButton sx={{ borderRadius: 1 }}>
                 <SettingsIcon fontSize="small" />
               </IconButton>
               <IconButton
