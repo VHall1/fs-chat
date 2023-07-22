@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../queries/user-queries";
+import { Loading } from "./loading";
 
 export const PrivateRoute: React.FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ export const PrivateRoute: React.FC<PropsWithChildren> = ({ children }) => {
     retry: false,
   });
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!user) {
     requestAnimationFrame(() => navigate("/auth/login", { replace: true }));
