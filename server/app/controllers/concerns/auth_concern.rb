@@ -1,7 +1,7 @@
 module AuthConcern
   extend ActiveSupport::Concern
 
-  def require_login
+  def require_login!
     return if current_user
 
     render json: { error: 'Not logged in' }, status: :unauthorized

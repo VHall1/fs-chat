@@ -8,24 +8,45 @@ import {
   ListItem,
   ListItemButton,
   Paper,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteLogout, getCurrentUser } from "../../queries/user-queries";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../../api";
+import { deleteLogout, getCurrentUser } from "../../shared-queries/user-queries";
 
 export const Sidenav = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const { data: user } = useQuery({
     queryKey: ["getCurrentUser"],
     queryFn: getCurrentUser,
+  });
+  const { data: channels, isLoading: isLoadingChannels } = useQuery({
+    queryKey: ["getSubscribedChannels"],
+    queryFn: getChannels,
   });
   const { mutateAsync: mutateAsyncLogout } = useMutation({
     mutationFn: deleteLogout,
   });
 
+  const { channelId } = useParams();
+  if (channels && !isLoadingChannels && !channelId) {
+    requestAnimationFrame(() => navigate(`/chat/${channels[0].id}`));
+  }
+  const formattedChannelId = channelId ? parseInt(channelId) : undefined;
+
   const handleLogout = async () => {
     await mutateAsyncLogout();
     queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+  };
+
+  const handleClickChannel = (channels: Channel[], channelId: number) => {
+    if (channels.find((channel) => channel.id === channelId)) {
+      navigate(`/chat/${channelId}`);
+    }
   };
 
   return (
@@ -39,14 +60,34 @@ export const Sidenav = () => {
         borderColor: (theme) => theme.palette.divider,
       }}
     >
-      <List sx={{ overflow: "hidden", overflowY: "auto" }} disablePadding>
-        <ListItem disablePadding dense selected>
-          <ListItemButton># general</ListItemButton>
-        </ListItem>
-        <ListItem disablePadding dense>
-          <ListItemButton># 👏memes👏</ListItemButton>
-        </ListItem>
-      </List>
+      {isLoadingChannels ? (
+        <List sx={{ overflow: "hidden", overflowY: "auto" }} disablePadding>
+          {[...new Array(10)].map((_, i) => (
+            <ListItem disablePadding dense key={i}>
+              <ListItemButton disabled>
+                <Skeleton sx={{ width: 1.0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <List sx={{ overflow: "hidden", overflowY: "auto" }} disablePadding>
+          {channels?.map((channel, _, channels) => (
+            <ListItem
+              disablePadding
+              dense
+              key={`${channel.name}-${channel.id}`}
+            >
+              <ListItemButton
+                selected={channel.id === formattedChannelId}
+                onClick={() => handleClickChannel(channels, channel.id)}
+              >
+                # {channel.name}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )}
       <Box
         sx={{
           mt: "auto",
@@ -72,10 +113,7 @@ export const Sidenav = () => {
               </Typography>
             </Box>
             <Box sx={{ ml: "auto" }}>
-              <IconButton
-                sx={{ borderRadius: 1 }}
-                onClick={() => handleLogout()}
-              >
+              <IconButton sx={{ borderRadius: 1 }}>
                 <SettingsIcon fontSize="small" />
               </IconButton>
               <IconButton
@@ -93,3 +131,6 @@ export const Sidenav = () => {
     </Paper>
   );
 };
+
+const getChannels: () => Promise<Channel[]> = async () =>
+  (await api.get("/channels")).data;

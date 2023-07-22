@@ -1,9 +1,10 @@
-import { Box, Card, CardContent, styled } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { PropsWithChildren } from "react";
+import { Container } from "../../components/container";
 
 export const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Container>
+    <Container sx={{ alignItems: "center", justifyContent: "center" }}>
       <Box maxWidth="sm" width={1.0}>
         <Card sx={{ width: 1.0 }}>
           <CardContent>{children}</CardContent>
@@ -12,11 +13,3 @@ export const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
     </Container>
   );
 };
-
-const Container = styled(Box)(() => ({
-  display: "flex",
-  width: "100vw",
-  height: "100vh",
-  alignItems: "center",
-  justifyContent: "center",
-}));

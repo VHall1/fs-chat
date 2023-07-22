@@ -1,15 +1,14 @@
 class MessagesController < ApplicationController
-  include AuthConcern
-
   before_action :set_message, only: %i[show update destroy]
-  before_action :require_login
+  before_action :set_channel!, only: %i[index create]
+  before_action :require_login!
 
   # GET /messages
   def index
     if (cursor = params[:cursor])
-      @messages = Message.where('id < ?', cursor).order(id: :desc).limit(25)
+      @messages = @channel.messages.where('id < ?', cursor).order(id: :desc).limit(25)
     else
-      @messages = Message.all.order(id: :desc).limit(25)
+      @messages = @channel.messages.order(id: :desc).limit(25)
     end
 
     render 'index', formats: :json
@@ -23,6 +22,7 @@ class MessagesController < ApplicationController
   # POST /messages
   def create
     @message = current_user.messages.new(message_params)
+    @message.channel = @channel
 
     if @message.save
       ActionCable.server.broadcast(
@@ -54,6 +54,14 @@ class MessagesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_message
     @message = Message.find(params[:id])
+  end
+
+  def set_channel!
+    @channel = Channel.find(params[:channelId])
+
+    if @channel.nil?
+      render json: { error: 'Channel not found' }, status: :not_found
+    end
   end
 
   # Only allow a list of trusted parameters through.
