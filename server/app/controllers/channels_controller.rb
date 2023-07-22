@@ -6,6 +6,7 @@ class ChannelsController < ApplicationController
   # GET /channels.json
   def index
     @channels = current_user.channels
+    render 'index', formats: :json
   end
 
   # POST /channels
