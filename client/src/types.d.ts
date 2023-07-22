@@ -11,3 +11,10 @@ interface Message {
   createdAt: string;
   updatedAt: string;
 }
+
+interface Channel {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
