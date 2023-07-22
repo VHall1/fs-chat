@@ -1,23 +1,32 @@
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Avatar, Box, IconButton, Paper, Typography } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useUserStore } from "../../global-store/user-store";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteLogout, getCurrentUser } from "../../queries/user-queries";
 
 export const Sidenav = () => {
-  const { user, setUser } = useUserStore();
-
-  useQuery({
+  const queryClient = useQueryClient();
+  const { data: user } = useQuery({
     queryKey: ["getCurrentUser"],
     queryFn: getCurrentUser,
-    onSuccess: (data) => setUser(data),
+  });
+  const { mutateAsync: mutateAsyncLogout } = useMutation({
+    mutationFn: deleteLogout,
   });
 
-  const { mutate: handleLogout } = useMutation({
-    mutationFn: deleteLogout,
-    onSuccess: () => setUser(null),
-  });
+  const handleLogout = async () => {
+    await mutateAsyncLogout();
+    queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+  };
 
   return (
     <Paper
@@ -30,7 +39,14 @@ export const Sidenav = () => {
         borderColor: (theme) => theme.palette.divider,
       }}
     >
-      <Box>Channels go here</Box>
+      <List sx={{ overflow: "hidden", overflowY: "auto" }} disablePadding>
+        <ListItem disablePadding dense selected>
+          <ListItemButton># general</ListItemButton>
+        </ListItem>
+        <ListItem disablePadding dense>
+          <ListItemButton># 👏memes👏</ListItemButton>
+        </ListItem>
+      </List>
       <Box
         sx={{
           mt: "auto",
