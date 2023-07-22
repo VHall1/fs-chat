@@ -12,33 +12,34 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_07_22_172644) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "channels", force: :cascade do |t|
-    t.integer "owner_id", null: false
+  create_table "channels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.uuid "owner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name", null: false
     t.index ["name"], name: "index_channels_on_name", unique: true
   end
 
-  create_table "messages", force: :cascade do |t|
+  create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "content"
-    t.integer "author_id", null: false
+    t.uuid "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "channel_id"
+    t.uuid "channel_id"
     t.index ["author_id"], name: "index_messages_on_author_id"
   end
 
-  create_table "user_channels", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "channel_id", null: false
+  create_table "user_channels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "channel_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", null: false
     t.string "username", limit: 32
     t.integer "discriminator", null: false
