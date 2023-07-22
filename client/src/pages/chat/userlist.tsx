@@ -1,27 +1,33 @@
 import { Avatar, Box, Paper, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { wss } from "../../api";
+import { getCurrentUser } from "../../queries/user-queries";
 
 export const Userlist = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [_users, setUsers] = useState<User[]>([]);
+  const { data: user } = useQuery({
+    queryKey: ["getCurrentUser"],
+    queryFn: getCurrentUser,
+  });
 
-  // useEffect(() => {
-  //   if (!user) return;
+  useEffect(() => {
+    if (!user) return;
 
-  //   const channel = wss.subscriptions.create(`UserlistChannel`, {
-  //     received: (data) => {
-  //       console.log("New message received", data);
-  //       setUsers(data);
-  //     },
-  //     connected: () => {
-  //       console.log(`Connected to userlist:${user.id}`);
-  //     },
-  //   });
+    const channel = wss.subscriptions.create(`UserlistChannel`, {
+      received: (data) => {
+        console.log("New message received", data);
+        setUsers(data);
+      },
+      connected: () => {
+        console.log(`Connected to userlist:${user.id}`);
+      },
+    });
 
-  //   return () => {
-  //     channel.unsubscribe();
-  //   };
-  // }, [user]);
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [user]);
 
   return (
     <Paper
