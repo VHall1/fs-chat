@@ -16,8 +16,8 @@ export const Waitlist = () => {
           We'll send you an email as soon as your account is ready to go.
           <br />
           <br />
-          In the meantime, if you know someone who already has an account, you
-          can ask them to send you an invite.
+          In the meantime, if you know someone who already has access, you
+          can skip this step by asking for their friend code.
           <br />
           <br />
         </Typography>
