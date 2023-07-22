@@ -34,7 +34,7 @@ export const Sidenav = () => {
 
   const { channelId } = useParams();
   if (channels && !isLoadingChannels && !channelId) {
-    navigate(`/chat/${channels[0].id}`);
+    requestAnimationFrame(() => navigate(`/chat/${channels[0].id}`));
   }
   const formattedChannelId = channelId ? parseInt(channelId) : undefined;
 
