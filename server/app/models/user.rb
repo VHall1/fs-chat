@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   has_many :messages
+  has_many :channels, through: :user_channels
+  has_many :owned_channels, class_name: 'Channel', foreign_key: :owner_id
+
   has_secure_password
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, uniqueness: true
