@@ -5,8 +5,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api } from "../../api";
 import { getCurrentUser } from "../../queries/user-queries";
+import { useParams } from "react-router-dom";
 
 export const ChatInput = () => {
+  const { channelId } = useParams();
   const [inputText, setInputText] = useState("");
   const { data: user } = useQuery({
     queryKey: ["getCurrentUser"],
@@ -19,8 +21,11 @@ export const ChatInput = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!channelId) return;
+
     setInputText("");
-    handlePostMessage({ content: inputText });
+    handlePostMessage({ content: inputText, channelId });
   };
 
   return (
@@ -44,7 +49,7 @@ export const ChatInput = () => {
               </Box>
             ),
           }}
-          disabled={!user}
+          disabled={!user || !channelId}
           required
         />
       </Box>
@@ -52,6 +57,8 @@ export const ChatInput = () => {
   );
 };
 
-const postMessage: (data: { content: string }) => Promise<Message> = async (
-  data
-) => (await api.post<Message>("/messages", data)).data;
+const postMessage: (data: {
+  content: string;
+  channelId: string;
+}) => Promise<Message> = async (data) =>
+  (await api.post<Message>("/messages", data)).data;

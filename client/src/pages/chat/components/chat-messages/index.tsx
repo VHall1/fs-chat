@@ -1,30 +1,26 @@
 import { Paper, Typography } from "@mui/material";
 import {
-  InfiniteData,
   QueryFunction,
   useInfiniteQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { debounce } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, wss } from "../../../api";
-import { ChatInput } from "../chat-input";
+import { useCallback, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { api, wss } from "../../../../api";
+import { ChatInput } from "../../chat-input";
 import { ChatMessage } from "./chat-message";
 import { MessagesContainer } from "./messages-container";
 
 export const ChatMessages = () => {
-  const [messages, setMessages] = useState<
-    | InfiniteData<{
-        data: MessageData[];
-        nextCursor?: number | undefined;
-      }>
-    | undefined
-  >(undefined);
+  const { channelId } = useParams();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const channel = wss.subscriptions.create("ChatChannel", {
       received: (data) => {
         console.log("New message received", data);
-        setMessages((prev) => {
+        queryClient.setQueriesData(["messages", channelId], (prev: any) => {
           if (!prev) return prev;
 
           return {
@@ -47,22 +43,26 @@ export const ChatMessages = () => {
     return () => {
       channel.unsubscribe();
     };
-  }, [setMessages]);
+  }, [queryClient, channelId]);
 
-  const { isLoading, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["messages"],
+  const {
+    data: messages,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    enabled: !!channelId,
+    queryKey: ["messages", channelId],
     queryFn: getMessages,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    onSuccess: (data) => setMessages(data),
     refetchOnWindowFocus: false,
   });
-
   const flatMessages = useMemo(
-    () => messages?.pages?.flatMap((page) => page.data) ?? [],
+    () => messages?.pages.flatMap((page) => page.data) ?? [],
     [messages]
   );
 
-  const hasOldestMessage = messages?.pages?.slice(-1)[0].nextCursor === null;
+  const hasOldestMessage = messages?.pages.slice(-1)[0].nextCursor === null;
   const fetchMoreOnTopReached = useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
@@ -110,10 +110,10 @@ export const ChatMessages = () => {
 const getMessages: QueryFunction<{
   data: MessageData[];
   nextCursor?: number;
-}> = async ({ pageParam }) =>
+}> = async ({ pageParam, queryKey }) =>
   (
     await api.get("/messages", {
-      params: { cursor: pageParam },
+      params: { cursor: pageParam, channel_id: queryKey[1] },
     })
   ).data;
 

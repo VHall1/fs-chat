@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ChatMessages } from "./chat-messages";
+import { ChatMessages } from "./components/chat-messages";
 import { Sidenav } from "./sidenav";
 import { Userlist } from "./userlist";
 
