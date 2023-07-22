@@ -113,7 +113,7 @@ const getMessages: QueryFunction<{
 }> = async ({ pageParam, queryKey }) =>
   (
     await api.get("/messages", {
-      params: { cursor: pageParam, channel_id: queryKey[1] },
+      params: { cursor: pageParam, channelId: queryKey[1] },
     })
   ).data;
 
