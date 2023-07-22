@@ -57,7 +57,7 @@ class MessagesController < ApplicationController
   end
 
   def set_channel!
-    @channel = Channel.find(params[:channel_id] || params[:channelId])
+    @channel = Channel.find(params[:channelId])
 
     if @channel.nil?
       render json: { error: 'Channel not found' }, status: :not_found
