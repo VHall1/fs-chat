@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :messages
   resources :users
+  resources :channels, only: %i[index create update destroy]
 
   namespace :auth do
     post :register
