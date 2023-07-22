@@ -1,6 +1,4 @@
 class MessagesController < ApplicationController
-  include AuthConcern
-
   before_action :set_message, only: %i[show update destroy]
   before_action :require_login
 
