@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :messages
+  has_many :user_channels
   has_many :channels, through: :user_channels
   has_many :owned_channels, class_name: 'Channel', foreign_key: :owner_id
 
