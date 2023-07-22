@@ -14,7 +14,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../api";
-import { deleteLogout, getCurrentUser } from "../../queries/user-queries";
+import { deleteLogout, getCurrentUser } from "../../shared-queries/user-queries";
 
 export const Sidenav = () => {
   const queryClient = useQueryClient();

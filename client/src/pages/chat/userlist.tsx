@@ -2,7 +2,7 @@ import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { wss } from "../../api";
-import { getCurrentUser } from "../../queries/user-queries";
+import { getCurrentUser } from "../../shared-queries/user-queries";
 
 export const Userlist = () => {
   const [_users, setUsers] = useState<User[]>([]);
