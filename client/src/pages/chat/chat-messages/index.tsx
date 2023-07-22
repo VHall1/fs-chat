@@ -39,6 +39,9 @@ export const ChatMessages = () => {
           };
         });
       },
+      connected: () => {
+        console.log("Connected to chat");
+      },
     });
 
     return () => {
@@ -94,7 +97,7 @@ export const ChatMessages = () => {
             key={message.id}
             message={message.content}
             timestamp={message.createdAt}
-            username={message.user.username}
+            username={message.author.username}
           />
         ))}
       </MessagesContainer>
@@ -114,4 +117,4 @@ const getMessages: QueryFunction<{
     })
   ).data;
 
-type MessageData = Message & { user: Pick<User, "id" | "username"> };
+type MessageData = Message & { author: Pick<User, "id" | "username"> };
