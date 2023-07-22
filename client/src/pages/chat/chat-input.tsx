@@ -1,14 +1,17 @@
-import { Box, IconButton, TextField } from "@mui/material";
-import { useState } from "react";
-import SendIcon from "@mui/icons-material/Send";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { useUserStore } from "../../global-store/user-store";
-import { useMutation } from "@tanstack/react-query";
+import SendIcon from "@mui/icons-material/Send";
+import { Box, IconButton, TextField } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { api } from "../../api";
+import { getCurrentUser } from "../../queries/user-queries";
 
 export const ChatInput = () => {
   const [inputText, setInputText] = useState("");
-  const { user } = useUserStore();
+  const { data: user } = useQuery({
+    queryKey: ["getCurrentUser"],
+    queryFn: getCurrentUser,
+  });
 
   const { mutate: handlePostMessage } = useMutation({
     mutationFn: postMessage,
