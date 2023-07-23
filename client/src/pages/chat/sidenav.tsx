@@ -43,6 +43,7 @@ export const Sidenav = () => {
   const handleLogout = async () => {
     await mutateAsyncLogout();
     queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+    navigate("/auth/login");
   };
 
   const handleClickChannel = (channels: Channel[], channelId: string) => {
