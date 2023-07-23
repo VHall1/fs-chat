@@ -28,7 +28,7 @@ module Server
     config.session_store :cookie_store,
       key: '_fschat_session',
       expires: 2.weeks,
-      same_site: Rails.env.production? ? :none : :lax,
+      same_site: :lax,
       secure: Rails.env.production?
 
     # Required for all session management (regardless of session_store)
