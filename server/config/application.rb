@@ -29,7 +29,8 @@ module Server
       key: '_fschat_session',
       expires: 2.weeks,
       same_site: :lax,
-      secure: Rails.env.production?
+      secure: Rails.env.production?,
+      domain: ENV.fetch('COOKIE_DOMAIN', nil)
 
     # Required for all session management (regardless of session_store)
     config.middleware.use ActionDispatch::Cookies
