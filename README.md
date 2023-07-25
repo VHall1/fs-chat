@@ -1,7 +1,7 @@
 ## About
 This is a simple chat application built with React, TypeScript, and Ruby on Rails. The main purpose of this project was to learn how to build an application using ActionCable/WebSockets and react-query.
 
-The api is hosted on Heroku and the client is hosted on Vercel. You can view the live demo [here](https://fs-chat.dev/).
+The api is hosted on Heroku and the client is hosted on Vercel. You can view the live demo [here](https://app.fs-chat.dev/).
 
 ## Technologies
 - Vite
