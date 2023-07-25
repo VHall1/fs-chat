@@ -21,9 +21,7 @@ export const PrivateRoute: React.FC<PropsWithChildren> = ({ children }) => {
   if (!user) {
     requestAnimationFrame(() => navigate("/auth/login", { replace: true }));
     return null;
-  }
-
-  if (!user.active) {
+  } else if (!user.active) {
     requestAnimationFrame(() => navigate("/auth/waitlist", { replace: true }));
     return null;
   }

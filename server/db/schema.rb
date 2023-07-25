@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_22_172644) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_152850) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -32,6 +32,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_22_172644) do
     t.index ["author_id"], name: "index_messages_on_author_id"
   end
 
+  create_table "referral_codes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "code", null: false
+    t.uuid "user_id", null: false
+    t.uuid "channel_id", null: false
+    t.integer "uses", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_referral_codes_on_code", unique: true
+  end
+
   create_table "user_channels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "channel_id", null: false
@@ -47,10 +57,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_22_172644) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: false
     t.string "password_digest"
+    t.uuid "referred_by_id"
   end
 
   add_foreign_key "channels", "users", column: "owner_id"
   add_foreign_key "messages", "users", column: "author_id"
+  add_foreign_key "referral_codes", "channels"
+  add_foreign_key "referral_codes", "users"
   add_foreign_key "user_channels", "channels"
   add_foreign_key "user_channels", "users"
+  add_foreign_key "users", "referral_codes", column: "referred_by_id"
 end

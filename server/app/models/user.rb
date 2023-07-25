@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_many :channels, through: :user_channels
   has_many :owned_channels, class_name: 'Channel', foreign_key: :owner_id
 
+  belongs_to :referred_by, optional: true, class_name: 'ReferralCode'
+
   has_secure_password
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, uniqueness: true

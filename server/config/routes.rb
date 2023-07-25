@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :users
   resources :channels, only: %i[index create update destroy]
 
+  namespace :referral_codes do
+    post :claim
+  end
+
   namespace :auth do
     post :register
     post :login
