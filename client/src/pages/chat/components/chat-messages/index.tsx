@@ -7,7 +7,7 @@ import {
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { api, wss } from "../../../../api";
+import { api, wss } from "../../../../utils/api";
 import { ChatInput } from "../../chat-input";
 import { ChatMessage } from "./chat-message";
 import { MessagesContainer } from "./messages-container";

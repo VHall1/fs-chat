@@ -3,8 +3,8 @@ import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { api } from "../../api";
-import { getCurrentUser } from "../../shared-queries/user-queries";
+import { api } from "../../utils/api";
+import { getCurrentUser } from "../../queries/user-queries";
 import { useParams } from "react-router-dom";
 
 export const ChatInput = () => {

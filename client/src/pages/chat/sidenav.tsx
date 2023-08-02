@@ -13,11 +13,11 @@ import {
 } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import {
   deleteLogout,
   getCurrentUser,
-} from "../../shared-queries/user-queries";
+} from "../../queries/user-queries";
 
 export const Sidenav = () => {
   const queryClient = useQueryClient();

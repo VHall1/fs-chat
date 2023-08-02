@@ -2,9 +2,9 @@ import { Box, Button, FormGroup, TextField, Typography } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../api";
+import { api } from "../../../utils/api";
 import { Container } from "../../../components/container";
-import { getCurrentUser } from "../../../shared-queries/user-queries";
+import { getCurrentUser } from "../../../queries/user-queries";
 import { Loading } from "../../../components/loading";
 import { AxiosError } from "axios";
 

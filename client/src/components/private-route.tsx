@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../shared-queries/user-queries";
+import { getCurrentUser } from "../queries/user-queries";
 import { Loading } from "./loading";
 
 export const PrivateRoute: React.FC<PropsWithChildren> = ({ children }) => {

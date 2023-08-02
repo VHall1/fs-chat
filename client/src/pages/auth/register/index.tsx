@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postRegister } from "../../../shared-queries/user-queries";
+import { postRegister } from "../../../queries/user-queries";
 import { AuthLayout } from "../layout";
 import { Link as RouterLink } from "react-router-dom";
 
