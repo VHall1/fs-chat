@@ -29,6 +29,7 @@
     "react-router-dom": "^6.13.0"
   },
   "devDependencies": {
+    "@emotion/jest": "^11.11.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
     "@types/actioncable": "^5.2.7",
